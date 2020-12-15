@@ -1,37 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace M
 {
     public class EmployeeParser
     {
-
+        /// returns employees' list in the tree view --- employees instances we passed
+        /// employees names in tree view
         public List<string> SortingDirectSubordination(List<Employee> employees)
         {
-            List<string> names = new List<string>();
-            foreach (var name in employees)
+            var resultList = new List<string>();
+            foreach (var emp in employees)
             {
-                names.Add(name.Name);
-            }
-            return names;
-        }
-
-
-        public List<string> SearchPosition(List<Employee> employees, string position)
-        {
-            List<string> names = new List<string>();
-            foreach (var name in employees)
-            {
-                if (name.Position == position)
+                if (emp.Position == "Director")
                 {
-                    names.Add(name.Name);
+                    resultList.Add(emp.Name);
+                }
+
+                if (emp.Position == "Manager")
+                {
+                    resultList.Add($"..{emp.Name}");
+                }
+                if (emp.Position == "Worker")
+                {
+                    resultList.Add($"....{emp.Name}");
                 }
             }
-            return names;
+
+            return resultList;
         }
 
-        public List<string> SortingPosition(List<Employee> employees)
+        public List<string> SearchPosition(List<Employee> employees, string position)//I used LINQ zaprosi
+        {
+            return employees.Where(x => x.Position == position).Select(x => x.Name).ToList();
+        }
+
+        public List<string> SortingPosition(List<Employee> employees)//I used LINQ zaprosi
         {
             List<string> managers = SearchPosition(employees, "Менеджер");
             List<string> workers = SearchPosition(employees, "Робітник");
@@ -43,38 +49,15 @@ namespace M
             return managers;
         }
 
-        public string MaxSalary(List<Employee> employees)
+        public string MaxSalary(List<Employee> employees)//I used LINQ zaprosi
         {
-            string name = "Робітники відсутні";
-            int salary = 0;
-            string position = "";
-
-            foreach (var employee in employees)
-            {
-                if (employee.Salary > salary)
-                {
-                    name = employee.Name;
-                    salary = employee.Salary;
-                    position = employee.Position;
-                }
-            }
-            return name;
+            if (employees.Count == 0) return "There are no employees in list";
+            return employees.OrderByDescending(x => x.Salary).First().Name;
         }
 
-
-
-        public List<string> OverSalary(List<Employee> employees, int setSalary)
+        public List<string> OverSalary(List<Employee> employees, int setSalary)//I used LINQ zaprosi
         {
-            List<string> names = new List<string>();
-
-            foreach (var employee in employees)
-            {
-                if (setSalary < employee.Salary)
-                {
-                    names.Add(employee.Name);
-                }
-            }
-            return names;
+            return employees.Where(x => x.Salary > setSalary).Select(x => x.Name).ToList();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using M.Interface;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,14 +9,14 @@ namespace M
     public class Employees
     {
 
-        public Interface.IStrategy Strategy { get; set; }
+        public IStrategy Strategy { get; set; }
 
-        public Employees(Interface.IStrategy strategy)
+        public Employees(IStrategy strategy)
         {
             Strategy = strategy;
         }
 
-        public List<Interface.IEmployee> Subordinate()
+        public List<IEmployee> Subordinate()
         {
             return Strategy.Subordinate();
         }

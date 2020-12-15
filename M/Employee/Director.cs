@@ -1,33 +1,34 @@
-﻿using System;
+﻿using M.Interface;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace M
 {
-    public class Director : Interface.IEmployee, Interface.IStrategy
+    public class Director : IEmployee, IStrategy
     {
         public string Name { get; private set; }
         public int Salary { get; private set; }
 
-        public string Position = "Директор";
+        public string Position = "Director";//Changed into Director
 
-        private List<Interface.IEmployee> _subordinate;
+        private List<IEmployee> _subordinate;
 
         public Director(string name, int salary)
         {
             Name = name;
             Salary = salary;
-            _subordinate = new List<Interface.IEmployee>();
+            _subordinate = new List<IEmployee>();
         }
 
 
-        public void Add(Interface.IEmployee employee)
+        public void Add(IEmployee employee)
         {
             _subordinate.Add(employee);
         }
 
 
-        public void Accept(Interface.IEmployeeVisitor visitor)
+        public void Accept(IEmployeeVisitor visitor)
         {
             visitor.Visit(this);
             foreach (var employee in _subordinate)
@@ -37,7 +38,7 @@ namespace M
 
         }
 
-        public List<Interface.IEmployee> Subordinate()
+        public List<IEmployee> Subordinate()
         {
             return _subordinate;
         }

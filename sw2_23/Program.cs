@@ -141,7 +141,7 @@ namespace sw2_23
 
             Employees employees = new Employees(supplyManager);
 
-            List<M.Interface.IEmployee> test = employees.Subordinate();
+            List<IEmployee> test = employees.Subordinate();
 
             foreach (var d in test)
             {

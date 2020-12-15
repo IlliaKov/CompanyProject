@@ -1,10 +1,11 @@
-﻿using System;
+﻿using M.Interface;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace M
 {
-    public class GetNames : Interface.IEmployeeVisitor
+    public class GetNames : IEmployeeVisitor
     {
         public List<Employee> Result { get; private set; }
 
