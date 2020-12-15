@@ -1,4 +1,5 @@
 ﻿using M;
+using M.Interface;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,6 +11,9 @@ namespace sw2_23
 
         static void Main(string[] args)
         {
+            Console.OutputEncoding = Encoding.UTF8;
+            Console.InputEncoding = Encoding.UTF8;
+
             var director = new Director("andriy", 12000);
             var supplyManager = new Manager("vova", 2900);
             var salesManager = new Manager("pasha", 4000);
@@ -29,24 +33,29 @@ namespace sw2_23
             salesManager.Add(workderA);
             salesManager.Add(workderB);
 
+            List<IEmployee> list = new List<IEmployee> { director, supplyManager, salesManager, workderB, workderA, workderX, workderY };
 
-            
 
 
-            M.Interface.IEmployee employee = director;
+
+
+            IEmployee employee = director;
 
 
             var names = new GetNames();
 
             employee.Accept(names);
 
-            M.EmployeeParser employeeParser = new EmployeeParser();
+            EmployeeParser employeeParser = new EmployeeParser();
             
 
             while (true)
             {
                 Console.WriteLine("1. Сортировка по належності (у вигляді дерева)\n2. Пошук позиції\n3. Сортировка по позиції\n4. Пошук більної зарплати\n5. Пошук більної заплати ніж у\n0. Вийти\n");
                 int number = Convert.ToInt32(Console.ReadLine());
+
+                Console.Clear();//clears a command menu
+
                 List<string> data = new List<string>() ;
 
 
@@ -61,7 +70,11 @@ namespace sw2_23
                         data = employeeParser.SortingDirectSubordination(names.Result);
                         break;
                     case 2:
-                        data = employeeParser.SearchPosition(names.Result, "Робітник");
+                        // Now you can enter employee position
+                        Console.WriteLine("enter employee's position: ");
+                        var result = Console.ReadLine();
+                        data = employeeParser.SearchPosition(names.Result, result);
+                        //
                         break;
                     case 3:
                         data = employeeParser.SortingPosition(names.Result);
@@ -70,7 +83,51 @@ namespace sw2_23
                         data = new List<string> { employeeParser.MaxSalary(names.Result)};
                         break;
                     case 5:
-                        data = employeeParser.OverSalary(names.Result, 4000);
+                        // now you can enter salary
+                        Console.WriteLine("enter salary you want to compare");
+                        var result2 = Convert.ToInt32(Console.ReadLine());
+                        data = employeeParser.OverSalary(names.Result, result2);
+                        break;
+
+                        // adding a new employee - new command
+                    case 6:
+                        Console.WriteLine("Choose employee's name:");
+                        var name = Console.ReadLine();
+                        Console.WriteLine("Choose employee's position: 1 - director, 2 - manager, 3 - worker");
+                        var chos = Convert.ToInt32(Console.ReadLine());
+
+                        List<string> resultNames = new List<string>();
+
+                        IEmployee emp = null;
+                        if (chos == 1)
+                        {
+                            emp = new Director(name, 5000);
+
+                        }
+                        else if (chos == 2)
+                        {
+                            emp = new Manager(name, 3000);
+                            resultNames = employeeParser.SearchPosition(names.Result, "Director");
+                        }
+                        else if (chos == 3)
+                        {
+                            emp = new Worker(name, 1000);
+                            resultNames = employeeParser.SearchPosition(names.Result, "Manager");
+                        }
+
+                        for (int i = 0; i < resultNames.Count; i++)
+                        {
+                            Console.WriteLine($"{i + 1} {resultNames[i]}");
+                        }
+
+                        var empNum = Convert.ToInt32(Console.ReadLine());
+                        list.Add(emp);
+                        var iemp = list.Find(x => x.Name == resultNames[empNum - 1]);
+                        iemp.Add(emp);
+
+                        names = new GetNames();
+                        employee.Accept(names);
+
                         break;
                 }
 
@@ -82,7 +139,7 @@ namespace sw2_23
             }
 
 
-            M.Employees employees = new Employees(supplyManager);
+            Employees employees = new Employees(supplyManager);
 
             List<M.Interface.IEmployee> test = employees.Subordinate();
 
